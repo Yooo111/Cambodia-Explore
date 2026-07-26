@@ -1,0 +1,182 @@
+{% extends "layouts/base_admin.html" %}
+
+{% block title %}Dashboard | Admin Panel{% endblock %}
+
+{% block admin_header_title %}Overview Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Executive Welcome Header -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> MySQL Database Active
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">System Control Panel</h2>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-xl">
+                Manage destination rules, cultural facts, user access permissions, and AI recommendation metadata in real time.
+            </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ url_for('admin.rules_create') }}" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> New Rule
+            </a>
+            <a href="{{ url_for('admin.facts_create') }}" class="px-4 py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-amber-600/30 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> New Fact
+            </a>
+            <a href="{{ url_for('admin.users_create') }}" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs rounded-xl transition-all flex items-center gap-2">
+                <i class="fa-solid fa-user-plus"></i> New User
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 High-Impact Metric Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Users Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Registered Users</span>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-lg">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+            <div class="flex items-baseline justify-between">
+                <div class="text-3xl font-extrabold text-slate-800">{{ metrics.total_users }}</div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                    Accounts
+                </span>
+            </div>
+            <a href="{{ url_for('admin.users_index') }}" class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                Manage User Accounts <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+
+        <!-- Rules Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Expert System Rules</span>
+                <div class="w-12 h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 text-lg">
+                    <i class="fa-solid fa-gears"></i>
+                </div>
+            </div>
+            <div class="flex items-baseline justify-between">
+                <div class="text-3xl font-extrabold text-slate-800">{{ metrics.total_rules }}</div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                    AI Ready
+                </span>
+            </div>
+            <a href="{{ url_for('admin.rules_index') }}" class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-purple-600 hover:text-purple-700 transition-colors">
+                Manage Destination Rules <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+
+        <!-- Facts Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Location Facts</span>
+                <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 text-lg">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+            </div>
+            <div class="flex items-baseline justify-between">
+                <div class="text-3xl font-extrabold text-slate-800">{{ metrics.total_facts }}</div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                    Knowledge Base
+                </span>
+            </div>
+            <a href="{{ url_for('admin.facts_index') }}" class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 hover:text-amber-700 transition-colors">
+                Manage Cultural Facts <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+
+        <!-- Taxonomy Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Taxonomy Items</span>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-lg">
+                    <i class="fa-solid fa-sitemap"></i>
+                </div>
+            </div>
+            <div class="flex items-baseline justify-between">
+                <div class="text-3xl font-extrabold text-slate-800">{{ metrics.total_taxonomy }}</div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Categories
+                </span>
+            </div>
+            <a href="{{ url_for('admin.taxonomy_index') }}" class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+                Manage Taxonomy Tree <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Metadata & Category Progress Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Category Metadata Cards -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-tags text-blue-500"></i> Defined Interest Tags
+                </h3>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">{{ metrics.total_tags }}</span>
+            </div>
+            <p class="text-xs text-slate-500">Keywords used by travelers to filter destinations by interest (temples, beaches, eco-nature).</p>
+            <a href="{{ url_for('admin.tags_index') }}" class="w-full inline-flex items-center justify-center px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 transition-colors">
+                Configure Tags
+            </a>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-face-smile text-purple-500"></i> Defined Travel Moods
+                </h3>
+                <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100">{{ metrics.total_moods }}</span>
+            </div>
+            <p class="text-xs text-slate-500">Atmosphere and vibe categories (peaceful, adventurous, romantic, family-friendly).</p>
+            <a href="{{ url_for('admin.moods_index') }}" class="w-full inline-flex items-center justify-center px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 transition-colors">
+                Configure Moods
+            </a>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-user-group text-amber-500"></i> Travel Partners
+                </h3>
+                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100">{{ metrics.total_go_with }}</span>
+            </div>
+            <p class="text-xs text-slate-500">Target audience categories (solo travelers, couples, group of friends, families).</p>
+            <a href="{{ url_for('admin.go_with_index') }}" class="w-full inline-flex items-center justify-center px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 transition-colors">
+                Configure Go With
+            </a>
+        </div>
+    </div>
+
+    <!-- Database Status & System Health -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-xl">
+                <i class="fa-solid fa-database"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-slate-800 text-sm">MySQL XAMPP Database Integration (`urac_db`)</h4>
+                <p class="text-xs text-slate-500">All data persistence, user accounts, and expert rules are synced to MySQL in real time.</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-xs flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Connected & Synced
+            </span>
+            <a href="{{ url_for('explorer.index') }}" target="_blank" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl shadow transition-colors flex items-center gap-1.5">
+                Preview Explorer Site <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

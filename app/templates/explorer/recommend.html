@@ -1,0 +1,442 @@
+{% extends "layouts/base_explorer.html" %}
+
+{% block title %}AI Travel Advisor | Cambodia Explorer{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+    
+    <!-- Header -->
+    <div class="text-center max-w-2xl mx-auto space-y-3">
+        <div class="flex items-center justify-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 border border-amber-500/30 text-amber-300 shadow-sm">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Smart AI Travel Advisor
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold {% if has_gemini_key %}bg-cyan-500/10 border border-cyan-500/30 text-cyan-300{% else %}bg-slate-800 border border-slate-700 text-slate-400{% endif %} shadow-sm">
+                <i class="fa-solid fa-brain text-cyan-400"></i> Powered by Google Gemini AI
+            </span>
+        </div>
+        <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-white">Express Your Travel Vibe or Voice</h1>
+        <p class="text-slate-300 text-sm leading-relaxed">
+            Tell us how you feel, speak into your mic, or upload/link a photo. Google Gemini AI analyzes your request and photo vibe to recommend top Cambodian destinations!
+        </p>
+    </div>
+
+
+    <!-- AI Advisor Expression & Voice & Photo Upload / Image Link Card -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-8">
+        <form id="recommendForm" method="post" action="{{ url_for('explorer.recommend') }}" enctype="multipart/form-data" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <!-- Natural Expression Text Box with Voice Mic Button -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label for="expression_text" class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                        <i class="fa-solid fa-comment-dots"></i> Describe Your Desired Trip or Feeling
+                    </label>
+                    <span id="speechStatus" class="text-xs font-bold text-amber-400 hidden items-center gap-1.5 animate-pulse">
+                        <span class="w-2 h-2 rounded-full bg-rose-500"></span> Listening to your voice... Speak now!
+                    </span>
+                </div>
+
+                <div class="relative">
+                    <textarea id="expression_text" name="expression_text" rows="4" placeholder="e.g. I feel like visiting a peaceful ancient temple surrounded by nature with my family for a low budget..." class="w-full p-4 bg-slate-950/90 border border-slate-800 rounded-2xl text-white placeholder-slate-500 text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none leading-relaxed transition-all shadow-inner">{{ expression_text if expression_text else '' }}</textarea>
+
+                    <!-- Voice Mic Button -->
+                    <button type="button" id="micBtn" class="absolute right-4 bottom-4 w-11 h-11 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-cyan-300 border border-cyan-500/40 flex items-center justify-center transition-all cursor-pointer shadow-lg group" title="Click to speak with microphone">
+                        <i class="fa-solid fa-microphone text-lg group-hover:scale-110 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Expression Inspiration Chips -->
+            <div class="space-y-2">
+                <span class="text-xs font-semibold text-slate-400 block">Quick Expressions (Click to fill):</span>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" class="sample-chip px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-medium rounded-xl transition-all cursor-pointer" data-text="I feel like visiting a peaceful ancient temple with family for low budget">
+                        🏛️ Ancient Temple & Peace
+                    </button>
+                    <button type="button" class="sample-chip px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-medium rounded-xl transition-all cursor-pointer" data-text="Relaxing beach seafood vibe in Kep for couple">
+                        🏖️ Relaxing Kep Beach
+                    </button>
+                    <button type="button" class="sample-chip px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-medium rounded-xl transition-all cursor-pointer" data-text="Mountain nature waterfall adventure with friends">
+                        ⛰️ Mountain & Waterfall Adventure
+                    </button>
+                    <button type="button" class="sample-chip px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-medium rounded-xl transition-all cursor-pointer" data-text="Phnom Penh shopping mall and walk street for group">
+                        🏙️ City Shopping & Walk Street
+                    </button>
+                </div>
+            </div>
+
+            <!-- Image Upload & URL Link Search Zone -->
+            <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-2">
+                        <i class="fa-solid fa-camera"></i> Visual Image Search (Photo Upload OR Image URL Link)
+                    </label>
+                    <span class="text-[11px] text-slate-500 font-medium">Matches photo features with database & Google Lens</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <!-- File Upload Input -->
+                    <div class="space-y-1">
+                        <span class="text-[11px] font-semibold text-slate-400 block">Upload Image File:</span>
+                        <div class="flex items-center gap-3">
+                            <input type="file" id="expression_image" name="expression_image" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600/30 file:text-purple-300 hover:file:bg-purple-600/40 cursor-pointer bg-slate-900 border border-slate-800 rounded-xl" />
+                            
+                            <div id="imagePreviewContainer" class="hidden flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden border border-purple-500/50 bg-slate-900">
+                                <img id="imagePreview" src="#" alt="Preview" class="w-full h-full object-cover" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image URL Link Input -->
+                    <div class="space-y-1">
+                        <span class="text-[11px] font-semibold text-slate-400 block">OR Paste Image URL Link:</span>
+                        <div class="relative">
+                            <i class="fa-solid fa-link absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input type="url" id="image_url" name="image_url" placeholder="https://example.com/photo.jpg" value="{{ image_url if image_url else '' }}" class="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-1 focus:ring-purple-500 outline-none" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button Bar -->
+            <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button type="submit" class="w-full sm:w-auto px-10 py-3.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-600 hover:opacity-95 text-white font-extrabold text-sm rounded-2xl shadow-xl shadow-indigo-600/30 transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> Calculate AI Recommendations
+                </button>
+
+                {% if google_lens_url %}
+                    <a href="{{ google_lens_url }}" target="_blank" rel="noopener" class="w-full sm:w-auto px-6 py-3.5 bg-purple-950/80 hover:bg-purple-900/90 text-purple-300 border border-purple-500/40 font-bold text-xs rounded-2xl transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-expand text-purple-400"></i> Deep Search Image on Google Lens
+                    </a>
+                {% endif %}
+
+                {% if has_searched and recommendations %}
+                    <a href="#resultsSection" class="w-full sm:w-auto px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs rounded-2xl transition-all flex items-center justify-center gap-2">
+                        <span>View {{ recommendations|length }} Recommendations</span>
+                        <i class="fa-solid fa-arrow-down text-cyan-400"></i>
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if not has_gemini_key %}
+                <!-- Gemini API Key Setup Notice -->
+                <div class="mt-4 p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-200 text-xs flex items-start gap-3 shadow-lg">
+                    <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-cyan-300 flex items-center justify-center flex-shrink-0 border border-indigo-500/30">
+                        <i class="fa-solid fa-key text-sm"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="font-bold text-cyan-300 flex items-center gap-2">
+                            <span>Enable Google Gemini AI Intelligence</span>
+                            <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-[10px] font-semibold">Optional</span>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed text-[11px]">
+                            Currently running in rule-based mode. To unlock Gemini's natural language understanding and multimodal image vibe analysis, set <code class="bg-slate-950 px-1.5 py-0.5 rounded text-cyan-300 font-mono">GEMINI_API_KEY=your_key</code> in your <code class="bg-slate-950 px-1.5 py-0.5 rounded text-cyan-300 font-mono">.env</code> file. Get a key free at <a href="https://aistudio.google.com/" target="_blank" rel="noopener" class="underline text-cyan-400 font-semibold hover:text-cyan-300">Google AI Studio</a>.
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Recommendation Results Anchor Section -->
+    <div id="resultsSection" class="scroll-mt-24 space-y-6">
+        {% if has_searched %}
+            
+            {% if is_gemini_powered %}
+                <!-- Gemini AI Advisor Personal Insights Callout -->
+                <div class="bg-gradient-to-r from-indigo-900/60 via-purple-900/60 to-slate-900/90 border border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-indigo-500/30 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 flex items-center justify-center text-lg shadow-inner">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-heading text-lg font-bold text-white flex items-center gap-2">
+                                    Gemini AI Advisor Insights
+                                </h3>
+                                <span class="text-xs text-cyan-300 font-medium">Personalized Itinerary & Vibe Analysis</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-xs font-extrabold flex items-center gap-1.5">
+                            <i class="fa-solid fa-sparkles text-amber-300"></i> Gemini 2.5 Flash
+                        </span>
+                    </div>
+
+                    {% if ai_advice_summary %}
+                        <div class="text-slate-200 text-sm leading-relaxed bg-slate-950/60 p-4 rounded-2xl border border-indigo-500/20 space-y-2">
+                            <div class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-comments"></i> Travel Recommendation Advice:
+                            </div>
+                            <p class="italic text-slate-100 font-medium">{{ ai_advice_summary }}</p>
+                        </div>
+                    {% endif %}
+
+                    {% if image_analysis %}
+                        <div class="text-slate-200 text-xs leading-relaxed bg-purple-950/50 p-4 rounded-2xl border border-purple-500/30 flex items-start gap-3">
+                            <i class="fa-solid fa-eye text-purple-400 text-base mt-0.5"></i>
+                            <div>
+                                <strong class="text-purple-300 block mb-0.5">Multimodal Photo Analysis:</strong>
+                                <p class="text-purple-200/90">{{ image_analysis }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <!-- Apology & Resembling Message Banner -->
+            {% if apology_message %}
+                <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 flex items-start gap-4 shadow-xl">
+                    <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-lg flex-shrink-0 border border-amber-500/40">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="font-bold text-amber-200 text-sm flex items-center gap-2">
+                            Closest Resembling Recommendations
+                        </h3>
+                        <p class="text-xs text-amber-300/90 leading-relaxed">
+                            {{ apology_message }}
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Results Header -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                        {% if is_gemini_powered %}
+                            <i class="fa-solid fa-brain me-1 text-cyan-300"></i> Google Gemini AI Recommendations
+                        {% else %}
+                            AI & Rule-Based Match Results
+                        {% endif %}
+                    </span>
+                    <h2 class="font-heading text-2xl font-bold text-white mt-0.5">
+                        {% if is_exact %}
+                            🎉 Exact Match Destinations
+                        {% else %}
+                            ✨ Resembling Recommended Destinations
+                        {% endif %}
+                    </h2>
+                </div>
+                <span class="px-4 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-extrabold">
+                    {{ recommendations|length }} Suggested Places
+                </span>
+            </div>
+
+            {% if recommendations %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for rec in recommendations %}
+                        <div class="bg-slate-900/80 border {% if rec.is_active == False %}border-rose-900/60 opacity-85{% else %}border-slate-800 hover:border-indigo-500/50{% endif %} rounded-2xl overflow-hidden shadow-xl flex flex-col group transition-all">
+                            
+                            <!-- Destination Photo (CLICKABLE LINK) -->
+                            <a href="{{ url_for('explorer.location_detail', rule_id=rec.id) if rec.id else url_for('explorer.index', query=rec.location_name) }}" class="block relative h-48 bg-slate-950 overflow-hidden cursor-pointer group/img" title="Click to view details of {{ rec.location_name }}">
+                                {% set rec_img = rec.images_list[0] if rec.images_list else rec.image %}
+                                {% if rec_img %}
+                                    <img src="{{ url_for('static', filename='uploads/' + rec_img) }}" alt="{{ rec.location_name }}" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500 {% if rec.is_active == False %}grayscale{% endif %}" />
+                                {% else %}
+                                    <div class="w-full h-full bg-slate-950 flex flex-col items-center justify-center text-slate-600">
+                                        <i class="fa-solid fa-image text-3xl mb-1 text-slate-700"></i>
+                                        <span class="text-[11px] font-semibold text-slate-500">No Image Uploaded</span>
+                                    </div>
+                                {% endif %}
+
+                                {% if rec.is_active == False %}
+                                    <div class="absolute top-3 left-3 bg-rose-600/90 text-white font-bold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1.5 border border-rose-400/40">
+                                        <i class="fa-solid fa-ban text-[10px]"></i> Inactive
+                                    </div>
+                                {% endif %}
+
+                                <div class="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md border border-cyan-400/40 text-cyan-300 font-extrabold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1.5">
+                                    <i class="fa-solid fa-bolt text-amber-400"></i> {{ rec.score }}% Match
+                                </div>
+
+                                <!-- Overlay Hover Click Indicator -->
+                                <div class="absolute inset-0 bg-indigo-950/30 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="px-3 py-1.5 rounded-full bg-slate-950/80 text-white text-xs font-bold border border-indigo-500/50 backdrop-blur-md shadow-lg flex items-center gap-1.5">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-cyan-400"></i> Open Details
+                                    </span>
+                                </div>
+                            </a>
+
+                            <div class="p-6 flex-1 flex flex-col">
+                                <div class="mb-3 flex items-center justify-between">
+                                    <div>
+                                        <a href="{{ url_for('explorer.location_detail', rule_id=rec.id) if rec.id else url_for('explorer.index', query=rec.location_name) }}" class="font-heading font-bold text-xl text-white hover:text-cyan-400 transition-colors">
+                                            {{ rec.location_name }}
+                                        </a>
+                                        <span class="text-xs font-semibold text-cyan-400 flex items-center gap-1 mt-0.5"><i class="fa-solid fa-map-pin"></i> {{ rec.province_name }}</span>
+                                    </div>
+                                    {% if rec.is_active == False %}
+                                        <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold border border-rose-500/30">Inactive</span>
+                                    {% endif %}
+                                </div>
+
+                                {% if rec.is_active == False %}
+                                    <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-medium mb-3 flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-exclamation text-rose-400 mt-0.5 flex-shrink-0"></i>
+                                        <span><strong>Status Reason:</strong> Marked as inactive in the system.</span>
+                                    </div>
+                                {% endif %}
+
+                                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-4">
+                                    <div class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-full rounded-full" style="width: {{ rec.score }}%;"></div>
+                                </div>
+
+                                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 mb-4 space-y-1 text-xs">
+                                    <div class="font-bold text-cyan-400 mb-1"><i class="fa-solid fa-circle-info me-1"></i> AI & Global Knowledge Context:</div>
+                                    {% for line in rec.why %}
+                                        <p class="text-slate-300 leading-relaxed">✓ {{ line }}</p>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Deep Global Knowledge Buttons (Google Maps, Wikipedia, Google Insights) -->
+                                <div class="space-y-2 pt-2 border-t border-slate-800/80 mt-auto">
+                                    <span class="text-[11px] font-semibold text-slate-400 block">Explore Global Information:</span>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <a href="{{ rec.google_maps_url }}" target="_blank" rel="noopener" class="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5" title="Explore on Google Maps">
+                                            <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Google Maps
+                                        </a>
+
+                                        <a href="{{ rec.wikipedia_url }}" target="_blank" rel="noopener" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5" title="Read on Wikipedia">
+                                            <i class="fa-solid fa-book-bookmark text-slate-300"></i> Wikipedia
+                                        </a>
+
+                                        <a href="{{ rec.google_search_url }}" target="_blank" rel="noopener" class="px-3 py-1.5 bg-sky-950/80 hover:bg-sky-900/90 text-sky-300 border border-sky-500/40 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5" title="Search Google Knowledge">
+                                            <i class="fa-brands fa-google text-sky-400"></i> Google Search
+                                        </a>
+
+                                        {% if rec.id %}
+                                            <a href="{{ url_for('explorer.location_detail', rule_id=rec.id) }}" class="ml-auto px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl shadow transition-all flex items-center gap-1.5">
+                                                Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- Interactive JavaScript for Voice Speech-To-Text & Photo Preview & Smooth Scroll -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const exprText = document.getElementById('expression_text');
+    const micBtn = document.getElementById('micBtn');
+    const speechStatus = document.getElementById('speechStatus');
+    const sampleChips = document.querySelectorAll('.sample-chip');
+    const imageInput = document.getElementById('expression_image');
+    const imageUrlInput = document.getElementById('image_url');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const resultsSection = document.getElementById('resultsSection');
+
+    // 1. Quick Sample Expression Chips
+    sampleChips.forEach(chip => {
+        chip.addEventListener('click', function () {
+            exprText.value = this.getAttribute('data-text');
+            exprText.focus();
+        });
+    });
+
+    // 2. Image Upload Live Preview
+    if (imageInput) {
+        imageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imagePreviewContainer.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            } else if (!imageUrlInput.value) {
+                imagePreviewContainer.classList.add('hidden');
+            }
+        });
+    }
+
+    // Image URL Live Preview
+    if (imageUrlInput) {
+        imageUrlInput.addEventListener('input', function () {
+            if (this.value) {
+                imagePreview.src = this.value;
+                imagePreviewContainer.classList.remove('hidden');
+            } else if (!imageInput.files.length) {
+                imagePreviewContainer.classList.add('hidden');
+            }
+        });
+    }
+
+    // 3. Web Speech API (Voice Speech-To-Text Mic Button)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        let isListening = false;
+
+        micBtn.addEventListener('click', function () {
+            if (!isListening) {
+                try {
+                    recognition.start();
+                    isListening = true;
+                    speechStatus.classList.remove('hidden');
+                    speechStatus.classList.add('flex');
+                    micBtn.classList.add('bg-rose-600', 'text-white', 'animate-pulse');
+                } catch (err) {
+                    console.log('Speech error:', err);
+                }
+            } else {
+                recognition.stop();
+                isListening = false;
+                speechStatus.classList.add('hidden');
+                speechStatus.classList.remove('flex');
+                micBtn.classList.remove('bg-rose-600', 'text-white', 'animate-pulse');
+            }
+        });
+
+        recognition.onresult = function (event) {
+            let transcript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                transcript += event.results[i][0].transcript;
+            }
+            exprText.value = transcript;
+        };
+
+        recognition.onerror = function (event) {
+            console.log('Speech error event:', event.error);
+            isListening = false;
+            speechStatus.classList.add('hidden');
+            speechStatus.classList.remove('flex');
+            micBtn.classList.remove('bg-rose-600', 'text-white', 'animate-pulse');
+        };
+
+        recognition.onend = function () {
+            isListening = false;
+            speechStatus.classList.add('hidden');
+            speechStatus.classList.remove('flex');
+            micBtn.classList.remove('bg-rose-600', 'text-white', 'animate-pulse');
+        };
+    } else {
+        micBtn.title = 'Voice speech recognition not supported in this browser';
+    }
+
+    // 4. Auto scroll to results section if searched
+    {% if has_searched %}
+        if (resultsSection) {
+            setTimeout(function () {
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    {% endif %}
+});
+</script>
+{% endblock %}

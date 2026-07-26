@@ -1,0 +1,74 @@
+[
+	{
+		"id": 1,
+		"name": "Beach",
+		"type": "tag",
+		"description": "Coastal destination with sea and sand."
+	},
+	{
+		"id": 2,
+		"name": "Temple",
+		"type": "tag",
+		"description": "Historical or religious temple attractions."
+	},
+	{
+		"id": 3,
+		"name": "Forest",
+		"type": "tag",
+		"description": "Nature-focused area with trees and wildlife."
+	},
+	{
+		"id": 4,
+		"name": "Relaxing",
+		"type": "mood",
+		"description": "Calm and peaceful travel style."
+	},
+	{
+		"id": 5,
+		"name": "Romantic",
+		"type": "mood",
+		"description": "Suitable for couples and intimate trips."
+	},
+	{
+		"id": 6,
+		"name": "Exciting",
+		"type": "mood",
+		"description": "Active and energetic travel feeling."
+	},
+	{
+		"id": 7,
+		"name": "Family",
+		"type": "go_with",
+		"description": "Traveling with family members."
+	},
+	{
+		"id": 8,
+		"name": "Friends",
+		"type": "go_with",
+		"description": "Traveling with friends."
+	},
+	{
+		"id": 9,
+		"name": "Solo",
+		"type": "go_with",
+		"description": "Traveling alone."
+	},
+	{
+		"id": 10,
+		"name": "Low",
+		"type": "budget",
+		"description": "Budget-conscious trip."
+	},
+	{
+		"id": 11,
+		"name": "Medium",
+		"type": "budget",
+		"description": "Balanced budget and comfort."
+	},
+	{
+		"id": 12,
+		"name": "High",
+		"type": "budget",
+		"description": "Premium budget level."
+	}
+]

@@ -1,0 +1,16 @@
+{% extends "layouts/base_explorer.html" %}
+
+{% block title %}500 Internal Error | Cambodia Explorer{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center px-6 py-12 text-center">
+    <div class="max-w-md space-y-4">
+        <div class="text-7xl font-extrabold font-heading text-rose-500">500</div>
+        <h1 class="text-2xl font-bold text-white">Something Went Wrong</h1>
+        <p class="text-xs text-slate-400">An unexpected server error occurred. Please try again in a few moments.</p>
+        <a href="{{ url_for('explorer.index') }}" class="inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-full shadow-lg transition-all">
+            Return to Homepage
+        </a>
+    </div>
+</div>
+{% endblock %}

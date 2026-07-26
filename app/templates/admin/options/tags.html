@@ -1,0 +1,70 @@
+{% extends "layouts/base_admin.html" %}
+
+{% block title %}Tags Catalog | Admin Panel{% endblock %}
+{% block admin_header_title %}Interest Tags Catalog{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <h2 class="text-xl font-bold text-slate-800">Interest Tags Configuration</h2>
+        <p class="text-xs text-slate-500">Configure search tags used by travelers to filter destinations by interest.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Add Tag Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs h-fit space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                <i class="fa-solid fa-plus text-blue-500"></i> Add New Tag
+            </h3>
+            <form method="post" action="{{ url_for('admin.tags_create') }}" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div>
+                    <label for="name" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Tag Name</label>
+                    <input type="text" id="name" name="name" required placeholder="e.g. Ancient Ruins" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all" />
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-xl shadow-md cursor-pointer transition-all">
+                    Create Tag
+                </button>
+            </form>
+        </div>
+
+        <!-- Tags Table Card -->
+        <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+            <div class="p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <h3 class="font-bold text-slate-800 text-sm">Defined Tags</h3>
+                <span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-bold text-xs border border-blue-200">{{ tags|length }} Total</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                            <th class="py-3.5 px-6">ID</th>
+                            <th class="py-3.5 px-6">Tag Name</th>
+                            <th class="py-3.5 px-6 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        {% for tag in tags %}
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="py-3.5 px-6 text-slate-400 font-mono">#{{ tag.id }}</td>
+                                <td class="py-3.5 px-6 font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-tag text-blue-500"></i> {{ tag.name }}
+                                </td>
+                                <td class="py-3.5 px-6 text-right">
+                                    <form method="post" action="{{ url_for('admin.tags_delete', tag_id=tag.id) }}" class="inline">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" onclick="return confirm('Delete tag {{ tag.name }}?')" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer" title="Delete">
+                                            <i class="fa-solid fa-trash text-xs"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

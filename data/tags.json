@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Temple"
+  },
+  {
+    "id": 2,
+    "name": "Beach"
+  },
+  {
+    "id": 3,
+    "name": "Mountain"
+  },
+  {
+    "id": 4,
+    "name": "Forest"
+  },
+  {
+    "id": 5,
+    "name": "History"
+  },
+  {
+    "id": 6,
+    "name": "Modern"
+  },
+  {
+    "id": 7,
+    "name": "Shopping"
+  },
+  {
+    "id": 8,
+    "name": "Food"
+  },
+  {
+    "id": 9,
+    "name": "Island"
+  },
+  {
+    "id": 10,
+    "name": "Camping"
+  }
+]

@@ -1,0 +1,225 @@
+{% extends "layouts/base_explorer.html" %}
+
+{% block title %}Cambodia Travel Explorer | Home{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="relative bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white py-16 sm:py-24 overflow-hidden border-b border-slate-800">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.15),transparent_50%)]"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="max-w-3xl space-y-6">
+            <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 inline-flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> Expert System Travel Advisor
+            </span>
+            <h1 class="font-heading text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+                Discover Amazing <span class="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">Cambodian Destinations</span>
+            </h1>
+            <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+                Filter destinations by location, interests, travel moods, and companions using our Intelligent Rule Engine.
+            </p>
+
+            <!-- Search Form -->
+            <form method="get" action="{{ url_for('explorer.index') }}" class="pt-2">
+                <div class="flex flex-col sm:flex-row items-center gap-3 bg-slate-900/90 p-2 rounded-2xl border border-slate-800 shadow-2xl backdrop-blur-md">
+                    <div class="relative w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" name="query" value="{{ query }}" placeholder="Search by location (e.g. Angkor Wat, Kep)..." class="w-full pl-11 pr-4 py-3 bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none" />
+                    </div>
+                    <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:opacity-90 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-600/30 transition-all cursor-pointer flex-shrink-0">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Filter & Destinations Grid Section -->
+<section class="max-w-7xl mx-auto px-6 py-12">
+    <!-- Filter Card -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md mb-10 shadow-xl">
+        <form method="get" action="{{ url_for('explorer.index') }}">
+            {% if query %}<input type="hidden" name="query" value="{{ query }}" />{% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tags -->
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-3"><i class="fa-solid fa-tags me-1"></i> Interests / Tags</h3>
+                    <div class="flex flex-wrap gap-1.5">
+                        {% for tag in tag_options %}
+                            <label class="cursor-pointer">
+                                <input type="checkbox" name="tags" value="{{ tag }}" class="peer hidden" {% if tag.lower() in selected_tags %}checked{% endif %} />
+                                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/80 border border-slate-700 text-slate-300 peer-checked:bg-indigo-600 peer-checked:border-indigo-500 peer-checked:text-white transition-all inline-block">
+                                    {{ tag }}
+                                </span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Moods -->
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-3"><i class="fa-solid fa-face-smile me-1"></i> Travel Moods</h3>
+                    <div class="flex flex-wrap gap-1.5">
+                        {% for mood in mood_options %}
+                            <label class="cursor-pointer">
+                                <input type="checkbox" name="moods" value="{{ mood }}" class="peer hidden" {% if mood.lower() in selected_moods %}checked{% endif %} />
+                                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/80 border border-slate-700 text-slate-300 peer-checked:bg-indigo-600 peer-checked:border-indigo-500 peer-checked:text-white transition-all inline-block">
+                                    {{ mood }}
+                                </span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Go With -->
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-3"><i class="fa-solid fa-user-group me-1"></i> Travel Partners</h3>
+                    <div class="flex flex-wrap gap-1.5">
+                        {% for gw in go_with_options %}
+                            <label class="cursor-pointer">
+                                <input type="checkbox" name="go_with" value="{{ gw }}" class="peer hidden" {% if gw.lower() in selected_go_with %}checked{% endif %} />
+                                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/80 border border-slate-700 text-slate-300 peer-checked:bg-indigo-600 peer-checked:border-indigo-500 peer-checked:text-white transition-all inline-block">
+                                    {{ gw }}
+                                </span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Budget -->
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-3"><i class="fa-solid fa-wallet me-1"></i> Budget Level</h3>
+                    <div class="flex flex-wrap gap-1.5">
+                        {% for b in budget_options %}
+                            <label class="cursor-pointer">
+                                <input type="checkbox" name="budgets" value="{{ b }}" class="peer hidden" {% if b.lower() in selected_budgets %}checked{% endif %} />
+                                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/80 border border-slate-700 text-slate-300 capitalize peer-checked:bg-indigo-600 peer-checked:border-indigo-500 peer-checked:text-white transition-all inline-block">
+                                    {{ b }}
+                                </span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between border-t border-slate-800 pt-4 mt-6">
+                <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl shadow transition-all cursor-pointer">
+                    Apply Filter
+                </button>
+                <a href="{{ url_for('explorer.index') }}" class="text-xs text-slate-400 hover:text-slate-200 transition-colors">
+                    Reset Filters
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Header Section -->
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-3">
+            <h2 class="font-heading text-2xl font-bold text-white">Destinations</h2>
+            <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold">{{ rules|length }}</span>
+        </div>
+        <a href="{{ url_for('explorer.recommend') }}" class="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-semibold text-xs rounded-full transition-all flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Launch AI Recommendation Wizard
+        </a>
+    </div>
+
+    <!-- Cards Grid -->
+    {% if rules %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for item in rules %}
+                <div class="group bg-slate-900/70 border {% if not item.is_active %}border-rose-900/60 opacity-85{% else %}border-slate-800 hover:border-indigo-500/50{% endif %} rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-indigo-500/10 transition-all flex flex-col">
+                    <div class="relative h-48 bg-slate-950 overflow-hidden">
+                        {% set primary_image = item.images_list[0] if item.images_list else item.image %}
+                        {% if primary_image %}
+                            <img src="{{ url_for('static', filename='uploads/' + primary_image) }}" alt="{{ item.location_name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 {% if not item.is_active %}grayscale{% endif %}" />
+                        {% else %}
+                            <div class="w-full h-full bg-slate-950 flex flex-col items-center justify-center text-slate-600">
+                                <i class="fa-solid fa-image text-3xl mb-1 text-slate-700"></i>
+                                <span class="text-[11px] font-semibold text-slate-500">No Image Uploaded</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Active / Inactive Badge -->
+                        {% if not item.is_active %}
+                            <div class="absolute top-3 left-3 bg-rose-600/90 text-white font-bold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1.5 border border-rose-400/40">
+                                <i class="fa-solid fa-ban text-[10px]"></i> Inactive
+                            </div>
+                        {% else %}
+                            <div class="absolute top-3 left-3 bg-emerald-600/90 text-white font-bold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white"></span> Active
+                            </div>
+                        {% endif %}
+
+                        {% if item.match_percent is not none %}
+                            <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md border border-sky-400/40 text-sky-400 font-bold text-xs px-3 py-1 rounded-full shadow">
+                                <i class="fa-solid fa-bolt text-amber-400 me-1"></i>{{ item.match_percent }}% Match
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div class="flex items-center justify-between mb-1">
+                            <h3 class="font-heading font-bold text-xl text-white group-hover:text-indigo-400 transition-colors">{{ item.location_name }}</h3>
+                            {% if not item.is_active %}
+                                <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold border border-rose-500/30">Inactive</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-xs font-medium text-cyan-400 mb-3 flex items-center gap-1">
+                            <i class="fa-solid fa-map-pin"></i> {{ item.province_name }}
+                        </div>
+
+                        <!-- Inactive Reason Box if inactive -->
+                        {% if not item.is_active %}
+                            <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-medium mb-3 flex items-start gap-2">
+                                <i class="fa-solid fa-circle-exclamation text-rose-400 mt-0.5 flex-shrink-0"></i>
+                                <span><strong>Status Reason:</strong> This location is currently marked as inactive or closed.</span>
+                            </div>
+                        {% endif %}
+
+                        {% if item.match_percent is not none %}
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-3">
+                                <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full rounded-full" style="width: {{ item.match_percent }}%;"></div>
+                            </div>
+                        {% endif %}
+
+                        <p class="text-xs text-slate-400 line-clamp-3 mb-4 leading-relaxed">
+                            {{ item.explanation or 'Discover this amazing Cambodian destination.' }}
+                        </p>
+
+                        <div class="mt-auto pt-3 flex flex-wrap gap-1">
+                            {% for tag in item.tags %}
+                                <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-medium border border-slate-700">{{ tag }}</span>
+                            {% endfor %}
+                            {% for mood in item.moods %}
+                                <span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 text-[10px] font-medium border border-indigo-800/50">{{ mood }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800/80 mt-4 flex items-center justify-between">
+                            <span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-semibold capitalize border border-slate-700">
+                                Budget: {{ item.budget }}
+                            </span>
+                            <a href="{{ url_for('explorer.location_detail', rule_id=item.id) }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl shadow transition-all flex items-center gap-1.5">
+                                View Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-16 bg-slate-900/40 rounded-3xl border border-slate-800 max-w-lg mx-auto">
+            <i class="fa-solid fa-compass text-4xl text-slate-600 mb-3"></i>
+            <h3 class="font-heading font-bold text-lg text-white mb-1">No Destinations Found</h3>
+            <p class="text-xs text-slate-400 mb-4">Try clearing your filters or searching for another location.</p>
+            <a href="{{ url_for('explorer.index') }}" class="px-4 py-2 bg-indigo-600 text-white font-semibold text-xs rounded-xl inline-block">
+                Clear Filters
+            </a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

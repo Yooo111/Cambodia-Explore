@@ -1,0 +1,42 @@
+[
+	{
+		"id": 1,
+		"location_name": "Kep",
+		"description": "Kep is known for fresh crab market and peaceful sea views."
+	},
+	{
+		"id": 2,
+		"location_name": "Kep",
+		"description": "Sunset at Kep beach is popular for romantic trips."
+	},
+	{
+		"id": 3,
+		"location_name": "Siem Reap",
+		"description": "Angkor temples provide rich cultural and historical experiences."
+	},
+	{
+		"id": 4,
+		"location_name": "Siem Reap",
+		"description": "There are many family-friendly activities and guided tours."
+	},
+	{
+		"id": 5,
+		"location_name": "Mondulkiri",
+		"description": "Mondulkiri has cool weather, mountains, and forest landscapes."
+	},
+	{
+		"id": 6,
+		"location_name": "Mondulkiri",
+		"description": "It is a strong option for quiet, solo nature travel."
+	},
+	{
+		"id": 7,
+		"location_name": "Phnom Penh",
+		"description": "Phnom Penh has modern malls, restaurants, and nightlife."
+	},
+	{
+		"id": 8,
+		"location_name": "Phnom Penh",
+		"description": "It suits energetic weekend trips with friends."
+	}
+]

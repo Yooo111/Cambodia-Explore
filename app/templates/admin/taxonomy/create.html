@@ -1,0 +1,22 @@
+{% extends "layouts/base_admin.html" %}
+
+{% block title %}Create Taxonomy | Admin Panel{% endblock %}
+{% block admin_header_title %}Create Taxonomy Item{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Add Taxonomy Item</h2>
+            <p class="text-xs text-slate-500">Define a new category or classification item.</p>
+        </div>
+        <a href="{{ url_for('admin.taxonomy_index') }}" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-colors">
+            ← Back to Taxonomy
+        </a>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-xs">
+        {% include "admin/taxonomy/_form.html" %}
+    </div>
+</div>
+{% endblock %}

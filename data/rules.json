@@ -1,0 +1,217 @@
+[
+  {
+    "id": 1,
+    "name": "Romantic beach couple trip",
+    "location_name": "Beoung Yak Loum",
+    "province_name": "Kompong Change",
+    "budget": "medium",
+    "image": "139e3bf4c4e240ad82c4205e993b888a.jpg",
+    "explanation": "Kep is calm, romantic, and has good seafood by the sea.",
+    "tags": [
+      "Forest",
+      "History"
+    ],
+    "moods": [
+      "Relaxing",
+      "Romantic"
+    ],
+    "go_with": [
+      "Family"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "name": "Family temple and history",
+    "location_name": "Angkor Wat",
+    "province_name": "Siem Reap",
+    "budget": "medium",
+    "image": "8eb4e2d8afb3431eb40dab5a2ad02734.webp",
+    "explanation": "Siem Reap is ideal for family cultural trips and temple visits.",
+    "tags": [
+      "Temple",
+      "History"
+    ],
+    "moods": [
+      "Exciting"
+    ],
+    "go_with": [
+      "Family"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 3,
+    "name": "Solo mountain quiet escape",
+    "location_name": "Water Fall Bustra",
+    "province_name": "Mondulkiri",
+    "budget": "low",
+    "image": "950a4b22583641909968ddd5ad3320f5.webp",
+    "explanation": "Mondulkiri fits solo travelers who want nature and quiet time.",
+    "tags": [
+      "Mountain",
+      "Forest"
+    ],
+    "moods": [
+      "Relaxing",
+      "Want to be alone"
+    ],
+    "go_with": [
+      "Solo"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 4,
+    "name": "Friends city weekend",
+    "location_name": "Walk Street",
+    "province_name": "Phnom Penh",
+    "budget": "high",
+    "image": "829b6a938bc74682b82130486f7fd259.png",
+    "explanation": "Phnom Penh offers shopping, modern places, and nightlife for groups.",
+    "tags": [
+      "Modern",
+      "Shopping",
+      "Food"
+    ],
+    "moods": [
+      "Exciting"
+    ],
+    "go_with": [
+      "Friends",
+      "Couple"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 5,
+    "name": "Kep seafood sunset trip",
+    "location_name": "Kep",
+    "province_name": "Kep",
+    "budget": "medium",
+    "image": "8aa2fe1216f144ceaf7c6af0d03d1929.jpg",
+    "explanation": "Kep is great for fresh crab food and relaxing sunset beach time.",
+    "tags": [
+      "Beach",
+      "Food"
+    ],
+    "moods": [
+      "Relaxing",
+      "Romantic"
+    ],
+    "go_with": [
+      "Friends",
+      "Couple"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 6,
+    "name": "Siem Reap temple family day",
+    "location_name": "Kulen Mountain",
+    "province_name": "Siem Reap",
+    "budget": "medium",
+    "image": "",
+    "explanation": "Kulen Mountain is a perfect place for those who like view from mountain camping quite...",
+    "tags": [
+      "Mountain"
+    ],
+    "moods": [
+      "Relaxing",
+      "Exciting",
+      "Want to be alone"
+    ],
+    "go_with": [
+      "Family",
+      "Friends",
+      "Solo"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 7,
+    "name": "Mondulkiri solo nature retreat",
+    "location_name": "Dos Kromom Mountain",
+    "province_name": "Mondulkiri",
+    "budget": "low",
+    "image": "",
+    "explanation": "Mondulkiri offers cool mountain and forest views for peaceful solo travel.",
+    "tags": [
+      "Mountain",
+      "Forest"
+    ],
+    "moods": [
+      "Relaxing",
+      "Want to be alone"
+    ],
+    "go_with": [
+      "Solo"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 8,
+    "name": "Phnom Penh modern friends weekend",
+    "location_name": "Koh Noreah",
+    "province_name": "Phnom Penh",
+    "budget": "high",
+    "image": "",
+    "explanation": "Phnom Penh fits energetic friend trips with shopping, food, and nightlife.",
+    "tags": [
+      "Modern",
+      "Shopping",
+      "Food"
+    ],
+    "moods": [
+      "Romantic",
+      "Exciting"
+    ],
+    "go_with": [
+      "Friends",
+      "Couple"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 9,
+    "name": "Kep relaxing beach day",
+    "location_name": "Bok kor Moutain",
+    "province_name": "Kampot",
+    "budget": "high",
+    "image": "",
+    "explanation": "Kompot .......",
+    "tags": [
+      "Mountain"
+    ],
+    "moods": [
+      "Relaxing"
+    ],
+    "go_with": [
+      "Family",
+      "Friends"
+    ],
+    "is_active": true
+  },
+  {
+    "id": 10,
+    "name": "Aeon 3",
+    "location_name": "Aeon 3",
+    "province_name": "Phnom Penh",
+    "budget": "high",
+    "is_active": true,
+    "image": "7581f3c6d4084209ba1852d1b6b4f787.png",
+    "explanation": "JFKKFOFOFJF",
+    "tags": [
+      "Modern",
+      "Shopping"
+    ],
+    "moods": [
+      "Exciting",
+      "Funny"
+    ],
+    "go_with": [
+      "Friends",
+      "Couple"
+    ]
+  }
+]

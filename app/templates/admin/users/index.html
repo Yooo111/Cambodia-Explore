@@ -1,0 +1,80 @@
+{% extends "layouts/base_admin.html" %}
+
+{% block title %}Users Management | Admin Panel{% endblock %}
+{% block admin_header_title %}User Account Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header Toolbar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">User Accounts</h2>
+            <p class="text-xs text-slate-500">Manage registered users, assign security roles, and control account activation status.</p>
+        </div>
+        <a href="{{ url_for('admin.users_create') }}" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-xl shadow-md shadow-blue-600/20 transition-all flex items-center gap-2 self-start sm:self-auto">
+            <i class="fa-solid fa-user-plus"></i> Add New User
+        </a>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                        <th class="py-3.5 px-6">User</th>
+                        <th class="py-3.5 px-6">Full Name</th>
+                        <th class="py-3.5 px-6">Email</th>
+                        <th class="py-3.5 px-6">Role</th>
+                        <th class="py-3.5 px-6">Status</th>
+                        <th class="py-3.5 px-6 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    {% for user in users %}
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="py-4 px-6 font-semibold text-slate-800 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center border border-indigo-200">
+                                    {{ user.username[0]|upper }}
+                                </div>
+                                <span>{{ user.username }}</span>
+                            </td>
+                            <td class="py-4 px-6 text-slate-600">{{ user.full_name or '-' }}</td>
+                            <td class="py-4 px-6 text-slate-600">{{ user.email }}</td>
+                            <td class="py-4 px-6">
+                                {% if user.roles %}
+                                    <span class="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-bold text-[11px] border border-blue-200">
+                                        {{ user.roles[0].name }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-slate-400">No Role</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6">
+                                {% if user.is_active %}
+                                    <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px] border border-emerald-200 flex items-center gap-1.5 w-max">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                                    </span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-bold text-[11px] border border-slate-200 flex items-center gap-1.5 w-max">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Inactive
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-right space-x-1">
+                                <a href="{{ url_for('admin.users_edit', user_id=user.id) }}" class="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors inline-block" title="Edit">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </a>
+                                <a href="{{ url_for('admin.users_delete', user_id=user.id) }}" class="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors inline-block" title="Delete">
+                                    <i class="fa-solid fa-trash text-xs"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

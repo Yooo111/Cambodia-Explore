@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Admin Dashboard | Cambodia Explorer{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex antialiased">
+
+    <!-- Admin Sidebar -->
+    <aside class="w-64 bg-slate-900 text-slate-300 min-h-screen flex flex-col fixed top-0 left-0 z-40 border-r border-slate-800">
+        <div class="p-5 font-bold text-lg text-white border-b border-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-sky-400"></i>
+            <span>Admin<span class="text-sky-400">Panel</span></span>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+            <div>
+                <div class="px-3 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Overview</div>
+                <a href="{{ url_for('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and request.endpoint == 'admin.dashboard' %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-chart-pie w-4"></i> Dashboard
+                </a>
+                <a href="{{ url_for('explorer.index') }}" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 hover:text-white transition-colors">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-globe w-4"></i> View Site</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-70"></i>
+                </a>
+            </div>
+
+            <div>
+                <div class="px-3 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Access Control</div>
+                <a href="{{ url_for('admin.users_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'users' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-users w-4"></i> Users
+                </a>
+                <a href="{{ url_for('admin.roles_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'roles' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-user-shield w-4"></i> Roles
+                </a>
+                <a href="{{ url_for('admin.permissions_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'permissions' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-key w-4"></i> Permissions
+                </a>
+            </div>
+
+            <div>
+                <div class="px-3 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Expert System & Data</div>
+                <a href="{{ url_for('admin.rules_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'rules' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-gears w-4"></i> Rules
+                </a>
+                <a href="{{ url_for('admin.facts_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'facts' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-lightbulb w-4"></i> Facts
+                </a>
+                <a href="{{ url_for('admin.taxonomy_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'taxonomy' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-sitemap w-4"></i> Taxonomy
+                </a>
+            </div>
+
+            <div>
+                <div class="px-3 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Categories</div>
+                <a href="{{ url_for('admin.tags_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'tags' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-tags w-4"></i> Tags
+                </a>
+                <a href="{{ url_for('admin.moods_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'moods' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-face-smile w-4"></i> Moods
+                </a>
+                <a href="{{ url_for('admin.go_with_index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if request.endpoint and 'go_with' in request.endpoint %}bg-blue-600 text-white font-semibold{% else %}hover:bg-slate-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-user-group w-4"></i> Go With
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="pl-64 flex-1 flex flex-col min-h-screen">
+        <!-- Top Navigation Bar -->
+        <header class="bg-white border-b border-slate-200 h-16 px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+            <h1 class="font-semibold text-slate-700 text-base">
+                {% block admin_header_title %}Admin Control Panel{% endblock %}
+            </h1>
+
+            <div class="flex items-center gap-4">
+                <span class="text-xs text-slate-500">Logged in as <strong class="text-slate-700">{{ current_user.username }}</strong></span>
+                <a href="{{ url_for('auth.logout') }}" class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors">Logout</a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-8 flex-1">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="p-4 mb-6 rounded-xl text-sm font-medium border flex items-center justify-between shadow-xs {% if category == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800{% elif category == 'danger' %}bg-rose-50 border-rose-200 text-rose-800{% else %}bg-sky-50 border-sky-200 text-sky-800{% endif %}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
