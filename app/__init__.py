@@ -54,4 +54,8 @@ def create_app(config_class=Config):
 
     return app
 
+# Expose WSGI application instance so `gunicorn app:app` finds `app` in package `app`
+app = create_app()
+
+
 
