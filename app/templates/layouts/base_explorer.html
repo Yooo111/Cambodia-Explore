@@ -38,13 +38,14 @@
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
 
     <!-- Sticky Glass Navbar -->
-    <nav class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-6 py-4">
+    <nav class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-4">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <a href="{{ url_for('explorer.index') }}" class="font-heading font-extrabold text-2xl tracking-tight bg-gradient-to-r from-sky-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
+            <a href="{{ url_for('explorer.index') }}" class="font-heading font-extrabold text-xl sm:text-2xl tracking-tight bg-gradient-to-r from-sky-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
                 <i class="fa-solid fa-compass text-indigo-400"></i> Cambodia Explorer
             </a>
 
-            <div class="flex items-center gap-5">
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center gap-5">
                 <a href="{{ url_for('explorer.index') }}" class="text-sm font-semibold text-slate-200 hover:text-white transition-colors flex items-center gap-1.5">
                     <i class="fa-solid fa-house"></i> Home
                 </a>
@@ -53,7 +54,7 @@
                 </a>
 
                 {% if current_user.is_authenticated %}
-                    <span class="text-xs text-slate-400 hidden sm:inline">Hello, <strong class="text-slate-200">{{ current_user.username }}</strong></span>
+                    <span class="text-xs text-slate-400 hidden lg:inline">Hello, <strong class="text-slate-200">{{ current_user.username }}</strong></span>
                     {% if current_user.has_role('Admin') or current_user.has_permission('user.view') or current_user.has_permission('rule.view') %}
                         <a href="{{ url_for('admin.dashboard') }}" class="text-xs font-semibold px-3.5 py-1.5 rounded-full border border-sky-500/40 text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 transition-all flex items-center gap-1.5">
                             <i class="fa-solid fa-gauge-high"></i> Admin Portal
@@ -65,11 +66,43 @@
                     <a href="{{ url_for('auth.register') }}" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-lg shadow-indigo-500/25 hover:opacity-95 transition-all">Sign Up</a>
                 {% endif %}
             </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="explorer-menu-toggle" class="md:hidden p-2 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800 transition-colors focus:outline-none" aria-label="Toggle Navigation Menu">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Collapsible Menu -->
+        <div id="explorer-mobile-menu" class="hidden md:hidden pt-4 pb-2 border-t border-slate-800/80 mt-3 space-y-3 px-2">
+            <a href="{{ url_for('explorer.index') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-house w-5"></i> Home
+            </a>
+            <a href="{{ url_for('explorer.recommend') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold text-amber-400 hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-wand-magic-sparkles w-5"></i> AI Advisor
+            </a>
+
+            {% if current_user.is_authenticated %}
+                <div class="px-3 py-1 text-xs text-slate-400">Logged in as <strong class="text-slate-200">{{ current_user.username }}</strong></div>
+                {% if current_user.has_role('Admin') or current_user.has_permission('user.view') or current_user.has_permission('rule.view') %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold text-sky-400 hover:bg-slate-800 transition-colors">
+                        <i class="fa-solid fa-gauge-high w-5"></i> Admin Portal
+                    </a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold text-rose-400 hover:bg-slate-800 transition-colors">
+                    <i class="fa-solid fa-right-from-bracket w-5"></i> Logout
+                </a>
+            {% else %}
+                <div class="flex items-center gap-3 pt-2">
+                    <a href="{{ url_for('auth.login') }}" class="flex-1 text-center text-xs font-semibold px-3 py-2 rounded-lg border border-slate-700 text-slate-200 hover:border-slate-500 transition-all">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="flex-1 text-center text-xs font-semibold px-3 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-lg transition-all">Sign Up</a>
+                </div>
+            {% endif %}
         </div>
     </nav>
 
     <!-- Flashed Alerts -->
-    <div class="max-w-7xl mx-auto w-full px-6 pt-4">
+    <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 pt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -93,5 +126,18 @@
             <p class="text-slate-400">Discover temples, beaches, eco-resorts, and cultural highlights with intelligent recommendations.</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.getElementById('explorer-menu-toggle');
+            const mobileMenu = document.getElementById('explorer-mobile-menu');
+
+            if (menuToggle && mobileMenu) {
+                menuToggle.addEventListener('click', function () {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

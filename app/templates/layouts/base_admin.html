@@ -23,13 +23,22 @@
     <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex antialiased">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col lg:flex-row antialiased">
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity"></div>
 
     <!-- Admin Sidebar -->
-    <aside class="w-64 bg-slate-900 text-slate-300 min-h-screen flex flex-col fixed top-0 left-0 z-40 border-r border-slate-800">
-        <div class="p-5 font-bold text-lg text-white border-b border-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-sky-400"></i>
-            <span>Admin<span class="text-sky-400">Panel</span></span>
+    <aside id="admin-sidebar" class="w-64 bg-slate-900 text-slate-300 min-h-screen flex flex-col fixed top-0 left-0 z-50 border-r border-slate-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="p-5 font-bold text-lg text-white border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-sky-400"></i>
+                <span>Admin<span class="text-sky-400">Panel</span></span>
+            </div>
+            <!-- Close Button on Mobile -->
+            <button id="close-sidebar-btn" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg focus:outline-none" aria-label="Close Sidebar">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
         </div>
 
         <nav class="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
@@ -86,21 +95,26 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="pl-64 flex-1 flex flex-col min-h-screen">
+    <div class="lg:pl-64 pl-0 flex-1 flex flex-col min-h-screen w-full transition-all duration-300">
         <!-- Top Navigation Bar -->
-        <header class="bg-white border-b border-slate-200 h-16 px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-            <h1 class="font-semibold text-slate-700 text-base">
-                {% block admin_header_title %}Admin Control Panel{% endblock %}
-            </h1>
+        <header class="bg-white border-b border-slate-200 h-16 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+            <div class="flex items-center gap-3">
+                <button id="open-sidebar-btn" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors focus:outline-none" aria-label="Open Sidebar">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <h1 class="font-semibold text-slate-700 text-sm sm:text-base truncate">
+                    {% block admin_header_title %}Admin Control Panel{% endblock %}
+                </h1>
+            </div>
 
-            <div class="flex items-center gap-4">
-                <span class="text-xs text-slate-500">Logged in as <strong class="text-slate-700">{{ current_user.username }}</strong></span>
+            <div class="flex items-center gap-3 sm:gap-4">
+                <span class="text-xs text-slate-500 hidden sm:inline">Logged in as <strong class="text-slate-700">{{ current_user.username }}</strong></span>
                 <a href="{{ url_for('auth.logout') }}" class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors">Logout</a>
             </div>
         </header>
 
         <!-- Main Content -->
-        <main class="p-8 flex-1">
+        <main class="p-4 sm:p-6 lg:p-8 flex-1 w-full max-w-7xl">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -114,5 +128,31 @@
             {% block content %}{% endblock %}
         </main>
     </div>
+
+    <!-- JavaScript for Mobile Drawer Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('admin-sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const openBtn = document.getElementById('open-sidebar-btn');
+            const closeBtn = document.getElementById('close-sidebar-btn');
+
+            function openSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function closeSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            if (openBtn) openBtn.addEventListener('click', openSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+            if (backdrop) backdrop.addEventListener('click', closeSidebar);
+        });
+    </script>
 </body>
 </html>
