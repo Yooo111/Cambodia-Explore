@@ -4,24 +4,51 @@
 {% block admin_header_title %}Confirm Permission Deletion{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="admin-card border-danger">
-            <div class="admin-card-header bg-danger text-white">
-                <h5 class="mb-0">Delete Permission</h5>
-            </div>
-            <div class="p-4">
-                <p>Are you sure you want to delete permission <strong>{{ permission.code }}</strong> ({{ permission.name }})?</p>
+<div class="max-w-md mx-auto py-8">
+    <div class="bg-white border border-rose-200 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 text-center">
+        <!-- Warning Icon -->
+        <div class="w-16 h-16 rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 text-2xl mx-auto shadow-xs">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
 
-                <form method="post">
-                    {{ form.hidden_tag() }}
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="submit" class="btn btn-danger">Confirm Delete</button>
-                        <a href="{{ url_for('admin.permissions_index') }}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
+        <div class="space-y-2">
+            <h3 class="text-xl font-extrabold text-slate-800">Delete Permission</h3>
+            <p class="text-xs text-slate-500">
+                Are you sure you want to delete this permission flag? Roles assigned to this permission will lose this capability.
+            </p>
+        </div>
+
+        <!-- Permission details box -->
+        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-left">
+            <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-500 font-semibold">Permission Code:</span>
+                <span class="px-2.5 py-0.5 rounded bg-slate-900 text-sky-400 font-mono text-xs font-bold border border-slate-800">
+                    {{ permission.code }}
+                </span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-500 font-semibold">Display Name:</span>
+                <span class="font-bold text-slate-800">{{ permission.name }}</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-500 font-semibold">Target Module:</span>
+                <span class="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 font-bold text-[11px] border border-purple-200">
+                    {{ permission.module }}
+                </span>
             </div>
         </div>
+
+        <form method="post" class="space-y-3">
+            {{ form.hidden_tag() }}
+            
+            <button type="submit" class="w-full py-3 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-rose-600/30 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-trash"></i> Confirm & Delete Permission
+            </button>
+            <a href="{{ url_for('admin.permissions_index') }}" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-all inline-block">
+                Cancel
+            </a>
+        </form>
     </div>
 </div>
 {% endblock %}
+
